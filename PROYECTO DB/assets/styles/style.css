@@ -1,0 +1,53 @@
+/* Estilos generales */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+}
+
+.banner {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+}
+
+.banner h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.banner p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.banner .boton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    

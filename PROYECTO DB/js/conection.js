@@ -13,3 +13,5 @@ conexion.connect(function(err){
         console.log('connection_succefully established')
     }
 });
+
+conexion.end();
