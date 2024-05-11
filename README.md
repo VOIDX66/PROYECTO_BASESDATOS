@@ -1,4 +1,4 @@
-# *_PROYECTO_DATABASES_*
+# *_PROYECTO_BASES_DE_DATOS_*
 ---
 ### _Sitio web con node js/ Html5/ JavaScript/ Css / MySql_
 ---
