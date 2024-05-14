@@ -19,12 +19,20 @@ function filtrarCaracteresEspeciales() {
     }
 
     const regex_password = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{4,}$/;
-    const inputPasswordElement = document.getElementById('passw');
-    const valorPassword = inputPasswordElement.value;
+    const inputLoginPasswordElement = document.getElementById('login_passw');
+    const valorLoginPassword = inputLoginPasswordElement.value;
 
-    if (!regex_password.test(valorPassword)){
-        inputPasswordElement.value = ''; // Vaciar el campo si la contraseña no es válida
-        alert("La contraseña no debe contener caracteres especiales, esta debe tener minimo 4 digitos y contener"
+    if (!regex_password.test(valorLoginPassword)){
+        inputLoginPasswordElement.value = ''; // Vaciar el campo si la contraseña no es válida
+        alert("La contraseña no puede contener caracteres especiales");
+    }
+    
+    const inputRegisterPasswordElement = document.getElementById('passw');
+    const valorRegisterPassword = inputRegisterPasswordElement.value;
+
+    if (!regex_password.test(valorRegisterPassword)){
+        inputRegisterPasswordElement.value = ''; // Vaciar el campo si la contraseña no es válida
+        alert("La contraseña no puede contener caracteres especiales, esta debe tener minimo 4 digitos y contener"
               +"al menos una mayuscula y minuscula");
-    }    
+    }   
 }
