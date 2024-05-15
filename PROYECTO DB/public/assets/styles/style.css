@@ -1,0 +1,54 @@
+h1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif; /* Choose a default font family */
+}
+
+/* Form container styling */
+form {
+  display: flex; /* Arrange form elements horizontally */
+  flex-direction: column; /* Stack elements vertically */
+  width: 300px; /* Set a fixed width for the form */
+  margin: 50px auto; /* Center the form horizontally with margins */
+  padding: 20px; /* Add some padding for better readability */
+  border: 1px solid #ccc; /* Add a subtle border */
+  border-radius: 5px; /* Add rounded corners for a softer look */
+}
+
+/* Label styling */
+label {
+  display: block; /* Display labels on their own lines */
+  margin-bottom: 5px; /* Add some space after labels */
+  font-weight: bold; /* Make labels visually distinct */
+}
+
+/* Input field styling */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%; /* Make inputs fill the available width */
+  padding: 10px; /* Add padding for easier interaction */
+  border: 1px solid #ccc; /* Add a border to inputs */
+  border-radius: 3px; /* Add rounded corners */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* Button styling */
+button[type="submit"] {
+  background-color: #4CAF50; /* Green color for submit button */
+  color: white; /* White text for better contrast */
+  padding: 10px 20px; /* Add padding for a comfortable size */
+  border: none; /* Remove default button border */
+  border-radius: 5px; /* Add rounded corners */
+  cursor: pointer; /* Indicate clickable behavior */
+}
+
+button[type="submit"]:hover { /* Style on hover for visual feedback */
+  background-color: #3e8e41; /* Darken the green color on hover */
+}

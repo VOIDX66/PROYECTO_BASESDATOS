@@ -1,17 +1,22 @@
-//Importar libreria
+//Importar libreria::::::::::::::::::::::::::::::::::::::::::::
 const express = require('express');
-
+const ejs = require('ejs');
+//Objetos :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const app = express();
 
-/*//ruta inicial
-app.get('/',function(req,res){
-    res.send("En mantenimiento");
-});
-*/
-//ruta de archivos estaticos
+//app.set('views',"./public/views")
+app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-//80000,5000 si no da
+
+app.get("/",function(req,res){
+    res.render("index");
+});
+
+app.get("/register",function(req,res){
+    res.render("register");
+});
+
 app.listen(3000,function() {
     console.log("El servidor es http://localhost:3000");
 });

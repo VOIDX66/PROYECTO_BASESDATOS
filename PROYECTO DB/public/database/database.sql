@@ -8,12 +8,21 @@ CREATE TABLE `proyecto_db`.`usuario` (
 );
 
 CREATE TABLE `proyecto_db`.`producto` (
+	id_categoria INT AUTO_INCREMENT NOT NULL UNIQUE,
+    nombre_categoria VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE `proyecto_db`.`producto` (
     id_producto INT AUTO_INCREMENT UNIQUE,
+    id_categoria INT NOT NULL,
+    nombre_producto VARCHAR(50),
     descripcion VARCHAR(200),
     precio_unidad INT NOT NULL,
     cantidad_disp INT NOT NULL,
     imagen BLOB,
-    PRIMARY KEY (id_producto)
+    PRIMARY KEY (id_producto),
+    FOREIGN KEY (id_categoria)
+        REFERENCES categoria (id_categoria)
 );
 
 CREATE TABLE `proyecto_db`.`carrito` (
