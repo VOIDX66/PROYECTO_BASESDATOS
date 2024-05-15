@@ -1,13 +1,13 @@
 CREATE TABLE `proyecto_db`.`usuario` (
     id_usuario INT AUTO_INCREMENT NOT NULL UNIQUE,
     nombre_usuario VARCHAR(50) NOT NULL,
-    email_usario VARCHAR(50) UNIQUE,
+    email_usuario VARCHAR(50) UNIQUE,
     contrase_usuario VARCHAR(20) NOT NULL,
     tipo_usuario VARCHAR(50) NOT NULL,
     PRIMARY KEY(id_usuario)
 );
 
-CREATE TABLE `proyecto_db`.`producto` (
+CREATE TABLE `proyecto_db`.`categoria` (
 	id_categoria INT AUTO_INCREMENT NOT NULL UNIQUE,
     nombre_categoria VARCHAR(50) NOT NULL UNIQUE
 );
