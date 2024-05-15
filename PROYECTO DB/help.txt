@@ -1,3 +1,0 @@
-Probablemente les falte instalar en la consola de esta carpeta
-
-npm install mysql2
