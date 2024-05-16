@@ -64,6 +64,18 @@ CREATE TABLE COMPRA (
         REFERENCES CARRITO (id_carrito)
 );
 
+CREATE TABLE CONTENIDO_COMPRA (
+    reg INT PRIMARY KEY AUTO_INCREMENT,
+    id_compra INT,
+    id_producto INT,
+    cantidad_comprada INT,
+    FOREIGN KEY (id_compra)
+		REFERENCES COMPRA(id_compra),
+	FOREIGN KEY (id_producto)
+		REFERENCES PRODUCTO(id_producto)
+);
+
+
 -- Creaccion de triggers::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 DELIMITER //
 CREATE TRIGGER CREAR_CARRITO_USUARIO
@@ -93,24 +105,18 @@ BEGIN
 END;
 // DELIMITER ;
 
--- Trigger para reducir la cantidad disponible al crear una compra
 DELIMITER //
-CREATE TRIGGER REDUCIR_CANTIDAD_DISPONIBLE
+-- Trigger para reducir la cantidad disponible al crear una compra
+CREATE TRIGGER ACTUALIZAR_CANTIDAD_DISPONIBLE
 AFTER INSERT ON COMPRA
 FOR EACH ROW
 BEGIN
-    -- Actualizar la cantidad disponible restando la cantidad comprada
-    UPDATE PRODUCTO
-    SET cantidad_disp = cantidad_disp - (
-        SELECT cantidad_producto_c
-        FROM PRODUCTO_CARRITO
-        WHERE id_producto_carrito = NEW.id_carrito
-    )
-    WHERE id_producto IN (
-        SELECT id_producto
-        FROM PRODUCTO_CARRITO
-        WHERE id_producto_carrito = NEW.id_carrito
-    );
+    UPDATE PRODUCTO P
+    JOIN PRODUCTO_CARRITO PC ON P.id_producto = PC.id_producto
+    JOIN CARRITO CA ON PC.id_carrito = CA.id_carrito
+    JOIN COMPRA CO ON CO.id_carrito = CA.id_carrito 
+    SET P.cantidad_disp = P.cantidad_disp - PC.cantidad_producto_c
+    WHERE CO.id_compra = NEW.id_compra;
 END;
 // DELIMITER ;
 
@@ -120,34 +126,32 @@ CREATE TRIGGER RESTABLECER_CANTIDAD_DISPONIBLE
 AFTER UPDATE ON COMPRA
 FOR EACH ROW
 BEGIN
-    -- Verificar si el estado de la compra cambió a "CANCELADA"
-    IF OLD.estado <> NEW.estado AND NEW.estado = 'CANCELADA' THEN
-        -- Restablecer la cantidad disponible sumando la cantidad cancelada
-        UPDATE PRODUCTO
-        SET cantidad_disp = cantidad_disp + (
-            SELECT cantidad_producto_c
-            FROM PRODUCTO_CARRITO
-            WHERE id_producto_carrito = OLD.id_carrito
-        )
-        WHERE id_producto IN (
-            SELECT id_producto
-            FROM PRODUCTO_CARRITO
-            WHERE id_producto_carrito = OLD.id_carrito
-        );
+    IF NEW.estado = 'CANCELADA' AND OLD.estado <> 'CANCELADA' THEN
+        -- Actualizar la cantidad disponible de cada producto en función de las cantidades canceladas
+        UPDATE PRODUCTO P
+        JOIN PRODUCTO_CARRITO PC ON P.id_producto = PC.id_producto
+        SET P.cantidad_disp = P.cantidad_disp + PC.cantidad_producto_c
+        WHERE PC.id_carrito = NEW.id_carrito;
     END IF;
 END;
 // DELIMITER ;
 
 -- Trigger para vaciar la tabla PRODUCTO_CARRITO cuando una compra se completa
 DELIMITER //
-CREATE TRIGGER VACIAR_PRODUCTO_CARRITO
+CREATE TRIGGER GESTIONAR_COMPRA_COMPLETADA
 AFTER UPDATE ON COMPRA
 FOR EACH ROW
 BEGIN
     -- Verificar si el estado de la compra cambió a "COMPLETADA"
     IF OLD.estado <> NEW.estado AND NEW.estado = 'COMPLETADA' THEN
-        -- Eliminar todas las filas de la tabla PRODUCTO_CARRITO asociadas a la compra completada
-        DELETE FROM PRODUCTO_CARRITO WHERE id_producto_carrito = NEW.id_carrito;
+		-- Insertar los productos asociados a la compra en la tabla CONTENIDO_COMPRA
+        INSERT INTO CONTENIDO_COMPRA (id_compra, id_producto, cantidad_comprada)
+        SELECT NEW.id_compra, id_producto, cantidad_producto_c
+        FROM PRODUCTO_CARRITO
+        WHERE id_carrito = NEW.id_carrito;
+		
+        -- Eliminar todas las filas de la tabla PRODUCTO_CARRITO asociadas al carrito de la compra completada
+        DELETE FROM PRODUCTO_CARRITO WHERE id_carrito = NEW.id_carrito;
     END IF;
 END;
 // DELIMITER ;
