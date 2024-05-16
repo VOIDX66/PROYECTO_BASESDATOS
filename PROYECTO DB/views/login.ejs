@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/styles/style.css">
+    <style>
+        /* Clase CSS para la animación de desvanecimiento */
+        .fade-out {
+            animation: fadeOut 1s ease-in-out forwards;
+        }
+        /* Animación de desvanecimiento */
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form action="\validar_login" method="post">
+        <label for="username">Nombre de usuario</label>
+        <input type="text" name="username" id="username" required>
+        <p></p> <!-- Primer párrafo para mostrar el mensaje de error -->
+        <label for="contra">Contraseña</label>
+        <input type="password" name="pass_user" id="pass_user" required>
+        <p id="errorParagraph"></p> <!-- Último párrafo para mostrar el mensaje de error -->
+        <button type="submit">Login</button>
+    </form>
+    <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <script>
+            // Cuando hay un error, establece el contenido del párrafo con id 'errorParagraph' al mensaje de error
+            document.getElementById('errorParagraph').textContent = "<%= error %>";
+            // Después de 5 segundos, añade la clase para el efecto de desvanecimiento
+            setTimeout(function() {
+                document.getElementById('errorParagraph').classList.add('fade-out');
+            }, 5000); // 5000 milisegundos = 5 segundos
+        </script>
+    <% } %>
+</body>
+</html>

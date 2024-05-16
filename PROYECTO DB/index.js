@@ -26,7 +26,7 @@ app.get("/register",function(req,res){
     res.render("register");
 });
 
-app.post("/validar",function(req,res){
+app.post("/validar_registro",function(req,res){
     const data = req.body;
     let username = data.username;
     let email = data.email;
@@ -37,10 +37,34 @@ app.post("/validar",function(req,res){
             throw err;
         }else{
             console.log("Data saved successfully");
-            res.render("index");
+            res.redirect("/");
         }
     }); 
 });
+
+app.get("/login",function(req,res){
+    res.render("login");
+});
+
+app.post('/validar_login', (req, res) => {
+    const data = req.body;
+    let username = data.username;
+    let password = data.pass_user;
+    const login = `SELECT * FROM USUARIO WHERE nombre_usuario = "${username}" AND contrase_usuario = "${password}"`;
+    connection.query(login,(err, results) => {
+        if (err) {
+            console.error('Error al verificar las credenciales:', err);
+        } else {
+            if (results.length > 0) {
+                res.redirect('/');
+            } else {
+                res.render('login', { error: 'Credenciales incorrectas. Por favor, intenta de nuevo.' });
+            }
+        }
+    });
+});
+
+
 
 //VALIDACION DE CONEXION CON LA BASE DE DATOS
 connection.connect(function(err){
