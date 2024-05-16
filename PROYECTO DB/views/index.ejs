@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online</title>
+    <link rel="stylesheet" href="assets/styles/index.css">
+    <!--<link rel="stylesheet" href="/public/assets/styles/index.css">-->
+</head>
+<body>
+
+<header>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/public/assets/images/blank_avatar.png" alt="Avatar" class="avatar">
+            <h1>Marketzet</h1>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar..." id="searchInput">
+            <button onclick="searchProducts()">Buscar</button>
+        </div>
+    </div>
+</header>
+
+<main id="mainContent">
+    <% if (typeof productos === 'undefined' || productos.length === 0) { %>
+        <div class="alert-danger">No se encontraron productos.</div>
+    <% } else { %>
+        <% productos.forEach(producto => { %>
+            <div class="product">
+                <h3><%= producto.nombre_producto %></h3>
+                <p><%= producto.descripcion %></p>
+                <p>Precio: <%= producto.precio_unidad %></p>
+                <% if (producto.imagen !== null) { %>
+                    <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto.imagen, 'binary').toString('base64') %>" alt="<%= producto.nombre_producto %>">
+                <% } else { %>
+                    <img src="">
+                <% } %>
+            </div>
+        <% }); %>
+    <% } %>
+</main>
+<footer>
+    <!-- Aquí podrías incluir información adicional, enlaces, etc. -->
+    <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

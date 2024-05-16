@@ -1,7 +1,7 @@
 //Importar libreria::::::::::::::::::::::::::::::::::::::::::::
 const express = require('express');
 const mysql = require('mysql2');
-const ejs = require('ejs');
+const fs = require('fs');
 //Objetos :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const app = express();
 const connection = mysql.createConnection({
@@ -18,8 +18,15 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 
 //RUTAS::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-app.get("/",function(req,res){
-    res.render("index");
+
+app.get("/", function(req, res) {
+    connection.query("SELECT * FROM PRODUCTO", (error, productos) => {
+        if (error) {
+            throw error;
+        }
+        res.render("index", { productos });
+        console.log(productos)
+    });
 });
 
 app.get("/register",function(req,res){
