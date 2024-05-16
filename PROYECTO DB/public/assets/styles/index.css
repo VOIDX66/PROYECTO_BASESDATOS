@@ -5,9 +5,13 @@
     box-sizing: border-box;
 }
 
+.dropdown{
+    margin-right: 50px;
+}
+
 .product img {
-    width: 200px; /* Ancho fijo */
-    height: 200px; /* Alto fijo */
+    width: 50%; /* Ancho fijo */
+    height: 50%; /* Alto fijo */
     object-fit: cover; /* Ajusta la imagen manteniendo su relación de aspecto */
 }
 
@@ -68,14 +72,25 @@ header {
 
 /* Estilos para el contenido principal */
 #mainContent {
-    padding: 20px;
+    display: flex;
+    padding-top: 20px;
+    padding-inline: 1%;
+    margin-left: 4%;
 }
 
+
 .product {
+    margin: 1%;
+    width: 30%;
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 80%;
+}
+
+.product h3{
+    font-size: 90%;
 }
 
 /* Estilos para el pie de página */

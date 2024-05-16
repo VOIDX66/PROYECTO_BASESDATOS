@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Online</title>
+    <title>Marketzet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles/index.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!--<link rel="stylesheet" href="/public/assets/styles/index.css">-->
 </head>
 <body>
@@ -12,12 +16,23 @@
 <header>
     <div class="navbar">
         <div class="logo">
-            <img src="/public/assets/images/blank_avatar.png" alt="Avatar" class="avatar">
+            <img src="assets/images/blank_avatar.png" alt="Avatar" class="avatar">
             <h1>Marketzet</h1>
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Buscar..." id="searchInput">
             <button onclick="searchProducts()">Buscar</button>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Categorías
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Categoría 1</a>
+                <a class="dropdown-item" href="#">Categoría 2</a>
+                <a class="dropdown-item" href="#">Categoría 3</a>
+                <!-- Agrega más categorías según sea necesario -->
+            </div>
         </div>
     </div>
 </header>
@@ -28,14 +43,14 @@
     <% } else { %>
         <% productos.forEach(producto => { %>
             <div class="product">
-                <h3><%= producto.nombre_producto %></h3>
-                <p><%= producto.descripcion %></p>
-                <p>Precio: <%= producto.precio_unidad %></p>
                 <% if (producto.imagen !== null) { %>
                     <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto.imagen, 'binary').toString('base64') %>" alt="<%= producto.nombre_producto %>">
                 <% } else { %>
                     <img src="">
                 <% } %>
+                <h3><%= producto.nombre_producto %></h3>
+                <p><%= producto.descripcion %></p>
+                <p>Precio: $<%= producto.precio_unidad %></p>
             </div>
         <% }); %>
     <% } %>

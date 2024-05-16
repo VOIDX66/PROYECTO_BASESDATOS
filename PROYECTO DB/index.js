@@ -1,7 +1,7 @@
 //Importar libreria::::::::::::::::::::::::::::::::::::::::::::
 const express = require('express');
 const mysql = require('mysql2');
-const fs = require('fs');
+
 //Objetos :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const app = express();
 const connection = mysql.createConnection({
