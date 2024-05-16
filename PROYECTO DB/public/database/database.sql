@@ -20,6 +20,8 @@ CREATE TABLE PRODUCTO (
     descripcion VARCHAR(200),
     precio_unidad INT NOT NULL,
     cantidad_disp INT NOT NULL,
+    comentarios VARCHAR(2000),
+    promedio_estrellas INT DEFAULT 0, 
     imagen BLOB,
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_categoria)
@@ -34,34 +36,32 @@ CREATE TABLE CARRITO (
         REFERENCES USUARIO (id_usuario)
 );
 
-CREATE TABLE CONTENIDO_CARRITO (
-    reg_insert INT AUTO_INCREMENT,
-    id_carrito INT,
+CREATE TABLE PRODUCTO_CARRITO (
+    id_producto_carrito INT AUTO_INCREMENT,
+    id_carrito INT NOT NULL,
     id_producto INT,
     cantidad_producto_c INT,
-    PRIMARY KEY (reg_insert),
+    PRIMARY KEY (id_producto_carrito),
 	FOREIGN KEY (id_producto)
-		REFERENCES PRODUCTO (id_producto)
+		REFERENCES PRODUCTO (id_producto),
+	FOREIGN KEY (id_carrito)
+		REFERENCES CARRITO (id_carrito)
 );
 
 CREATE TABLE COMPRA (
     id_compra INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     id_carrito INT,
-    id_producto INT,
-    estado_compra VARCHAR(50) DEFAULT "ENPROCESO",
-    cantidad_producto INT,
     metodo_pago VARCHAR(50) NOT NULL,
-    tipo_compra VARCHAR(50) NOT NULL,
-    fecha_compra DATE NOT NULL,
+    fecha_pedido DATE NOT NULL,
     direccion_entrega VARCHAR(100) NOT NULL,
+    n_contacto VARCHAR(10),
     precio_total INT DEFAULT 0,
+    estado VARCHAR(20) DEFAULT "ENPROCESO",
     FOREIGN KEY (id_usuario)
         REFERENCES USUARIO (id_usuario),
     FOREIGN KEY (id_carrito)
-        REFERENCES CARRITO (id_carrito),
-	FOREIGN KEY (id_producto)
-        REFERENCES PRODUCTO (id_producto)
+        REFERENCES CARRITO (id_carrito)
 );
 
 -- Creaccion de triggers::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -73,30 +73,85 @@ BEGIN
     INSERT INTO CARRITO (id_usuario) VALUES (NEW.id_usuario);
 END;
 //DELIMITER ;
+
 DELIMITER //
-CREATE TRIGGER CALCULAR_PRECIO_TOTAL_COMPRA
+CREATE TRIGGER CALCULAR_PRECIO_TOTAL
 BEFORE INSERT ON COMPRA
 FOR EACH ROW
 BEGIN
-    DECLARE precio_total_calculado INT;
+    DECLARE total INT;
     
-    IF NEW.tipo_compra = 'INDIVIDUAL' THEN
-        -- Calcular precio_total para compra de producto individual
-        SET precio_total_calculado = (SELECT precio_unidad * NEW.cantidad_producto
-                                      FROM PRODUCTO
-                                      WHERE id_producto = NEW.id_producto);
-    ELSE
-        -- Calcular precio_total para compra de carrito completo
-        SET precio_total_calculado = (SELECT SUM(precio_unidad * cantidad_producto_c)
-                                      FROM CONTENIDO_CARRITO
-                                      JOIN PRODUCTO ON CONTENIDO_CARRITO.id_producto = PRODUCTO.id_producto
-                                      WHERE id_carrito = NEW.id_carrito);
-    END IF;
-
-    -- Asignar el precio_total calculado a NEW.precio_total
-    SET NEW.precio_total = precio_total_calculado;
+    -- Calcular el precio total sumando los precios de todos los productos en el carrito
+    SELECT SUM(producto.precio_unidad * producto_carrito.cantidad_producto_c)
+    INTO total
+    FROM PRODUCTO producto
+    JOIN PRODUCTO_CARRITO producto_carrito ON producto.id_producto = producto_carrito.id_producto
+    WHERE producto_carrito.id_carrito = NEW.id_carrito;
+    
+    -- Asignar el precio total calculado a la columna precio_total de la fila que se está insertando
+    SET NEW.precio_total = total;
 END;
 // DELIMITER ;
+
+-- Trigger para reducir la cantidad disponible al crear una compra
+DELIMITER //
+CREATE TRIGGER REDUCIR_CANTIDAD_DISPONIBLE
+AFTER INSERT ON COMPRA
+FOR EACH ROW
+BEGIN
+    -- Actualizar la cantidad disponible restando la cantidad comprada
+    UPDATE PRODUCTO
+    SET cantidad_disp = cantidad_disp - (
+        SELECT cantidad_producto_c
+        FROM PRODUCTO_CARRITO
+        WHERE id_producto_carrito = NEW.id_carrito
+    )
+    WHERE id_producto IN (
+        SELECT id_producto
+        FROM PRODUCTO_CARRITO
+        WHERE id_producto_carrito = NEW.id_carrito
+    );
+END;
+// DELIMITER ;
+
+-- Trigger para restablecer la cantidad disponible al cancelar una compra
+DELIMITER //
+CREATE TRIGGER RESTABLECER_CANTIDAD_DISPONIBLE
+AFTER UPDATE ON COMPRA
+FOR EACH ROW
+BEGIN
+    -- Verificar si el estado de la compra cambió a "CANCELADA"
+    IF OLD.estado <> NEW.estado AND NEW.estado = 'CANCELADA' THEN
+        -- Restablecer la cantidad disponible sumando la cantidad cancelada
+        UPDATE PRODUCTO
+        SET cantidad_disp = cantidad_disp + (
+            SELECT cantidad_producto_c
+            FROM PRODUCTO_CARRITO
+            WHERE id_producto_carrito = OLD.id_carrito
+        )
+        WHERE id_producto IN (
+            SELECT id_producto
+            FROM PRODUCTO_CARRITO
+            WHERE id_producto_carrito = OLD.id_carrito
+        );
+    END IF;
+END;
+// DELIMITER ;
+
+-- Trigger para vaciar la tabla PRODUCTO_CARRITO cuando una compra se completa
+DELIMITER //
+CREATE TRIGGER VACIAR_PRODUCTO_CARRITO
+AFTER UPDATE ON COMPRA
+FOR EACH ROW
+BEGIN
+    -- Verificar si el estado de la compra cambió a "COMPLETADA"
+    IF OLD.estado <> NEW.estado AND NEW.estado = 'COMPLETADA' THEN
+        -- Eliminar todas las filas de la tabla PRODUCTO_CARRITO asociadas a la compra completada
+        DELETE FROM PRODUCTO_CARRITO WHERE id_producto_carrito = NEW.id_carrito;
+    END IF;
+END;
+// DELIMITER ;
+
 -- :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 INSERT INTO USUARIO (nombre_usuario, email_usuario, contrase_usuario, tipo_usuario)
@@ -108,7 +163,3 @@ INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Deportes");
 INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Tecnologia");
 INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Herramientas");
 INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Moda");
-
-INSERT INTO COMPRA
-(id_usuario, id_carrito, id_producto, cantidad_producto, metodo_pago, tipo_compra, fecha_compra, direccion_entrega)
-VALUES (2,2,NULL,NULL,"Tarjeta","CARRITO","2024-05-20","Calle 26 #17-02")
