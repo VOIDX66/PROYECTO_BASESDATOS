@@ -25,7 +25,7 @@ app.get("/", function(req, res) {
             throw error;
         }
         res.render("index", { productos });
-        console.log(productos)
+        //console.log(productos)
     });
 });
 
@@ -71,7 +71,20 @@ app.post('/validar_login', (req, res) => {
     });
 });
 
-
+app.get('/busqueda', (req, res) => {
+    const producto_buscado = req.query.searchInput;
+    const busqueda = `SELECT * FROM PRODUCTO WHERE nombre_producto = "${producto_buscado}"`;
+    connection.query(busqueda,(err, productos ) => {
+        if (err) {
+            throw err;
+        } else{
+            if (productos.length > 0) {
+                res.render("index", { productos });
+                console.log(productos);
+            }
+        }
+    });
+});
 
 //VALIDACION DE CONEXION CON LA BASE DE DATOS
 connection.connect(function(err){
