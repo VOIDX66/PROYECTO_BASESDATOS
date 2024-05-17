@@ -21,7 +21,6 @@ CREATE TABLE PRODUCTO (
     precio_unidad INT NOT NULL,
     cantidad_disp INT NOT NULL,
     comentarios VARCHAR(2000),
-    promedio_estrellas INT DEFAULT 0, 
     imagen BLOB,
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_categoria)

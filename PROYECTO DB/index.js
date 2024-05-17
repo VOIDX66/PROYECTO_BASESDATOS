@@ -62,7 +62,8 @@ app.post("/validar_registro",function(req,res){
             connection.query(get_id,function(err,usuario){
                 req.session.user = {
                     id: usuario[0].id_usuario,
-                    username: usuario[0].nombre_usuario
+                    username: usuario[0].nombre_usuario,
+                    tipo_usuario: usuario[0].tipo_usuario
                 };
                 //console.log(usuario[0]);
                 //La redireccion debe de estar dentro de la consulta para que esta funcione
@@ -91,9 +92,15 @@ app.post('/validar_login', (req, res) => {
             if (results.length > 0) {
                 req.session.user = {
                     id: results[0].id_usuario,
-                    username: results[0].nombre_usuario
+                    username: results[0].nombre_usuario,
+                    tipo_usuario: results[0].tipo_usuario
                 };
-                res.redirect('/');
+                const user = req.session.user;
+                let ruta = "/";
+                if (user.tipo_usuario == "administrador") {
+                    ruta = "/gestion";
+                }
+                res.redirect(ruta);
             } else {
                 res.render('login', { error: 'Credenciales incorrectas. Por favor, intenta de nuevo.' });
             }
@@ -132,12 +139,32 @@ app.get('/busqueda', (req, res) => {
         if (err) {
             throw err;
         } else{
-            if (productos.length > 0) {
-                res.render("index", { productos, user });
+            if (typeof user === 'undefined' || user.length === 0) {
+                //
             }else{
-                res.render("index", { user });
+                let ruta = "index";
+                if (user.tipo_usuario == "administrador"){
+                    ruta = "gestion_productos";
+                }
+                if (productos.length > 0) {
+                    res.render(ruta, { productos, user });
+                }else{
+                    res.render(ruta, { user });
+                }    
             }
         }
+    });
+});
+
+app.get("/gestion",function(req,res){
+    connection.query("SELECT * FROM PRODUCTO", (error, productos) => {
+        if (error) {
+            throw error;
+        }
+        const user = req.session.user;
+        //console.log(user);
+        res.render("gestion_productos", { productos, user });
+        //console.log(productos)
     });
 });
 
