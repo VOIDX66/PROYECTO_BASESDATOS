@@ -35,7 +35,7 @@ app.get("/", function(req, res) {
             throw error;
         }
         const user = req.session.user;
-        console.log(user);
+        //console.log(user);
         res.render("index", { productos, user });
         //console.log(productos)
     });
@@ -64,7 +64,7 @@ app.post("/validar_registro",function(req,res){
                     id: usuario[0].id_usuario,
                     username: usuario[0].nombre_usuario
                 };
-                console.log(usuario[0]);
+                //console.log(usuario[0]);
                 //La redireccion debe de estar dentro de la consulta para que esta funcione
                 res.redirect("/");
             });
@@ -103,7 +103,7 @@ app.post('/validar_login', (req, res) => {
 
 
 // Cierre de la sesion destruyendo la sesion
-app.get('/logout', (req, res) => {
+app.post('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
             console.error('Error al cerrar sesión:', err);
@@ -118,15 +118,24 @@ app.get('/logout', (req, res) => {
 // Busqueda de los productos
 app.get('/busqueda', (req, res) => {
     const producto_buscado = req.query.searchInput;
-    const busqueda = `SELECT * FROM PRODUCTO WHERE nombre_producto LIKE "%${producto_buscado}%"`;
-    connection.query(busqueda,(err, productos ) => {
+    const categoria = req.query.categoria;
+    let busqueda;
+    if (categoria != ""){
+        busqueda = `SELECT * FROM PRODUCTO P JOIN CATEGORIA C ` +
+                    `ON P.id_categoria = C.id_categoria `+
+                    `WHERE P.nombre_producto LIKE "%${producto_buscado}%" AND C.nombre_categoria = "${categoria}"`;
+    }else{
+        busqueda = `SELECT * FROM PRODUCTO WHERE nombre_producto LIKE "%${producto_buscado}%"`;
+    }
+    const user = req.session.user;
+    connection.query(busqueda,(err, productos) => {
         if (err) {
             throw err;
         } else{
             if (productos.length > 0) {
-                const user = req.session.user;
                 res.render("index", { productos, user });
-                console.log(productos);
+            }else{
+                res.render("index", { user });
             }
         }
     });

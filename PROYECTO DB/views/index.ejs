@@ -17,11 +17,15 @@
     <div class="navbar">
         <div class="logo">
             <% if (typeof user === 'undefined' || user.length === 0) { %>
-                <form action="\login">
+                <form action="\login" method="get">
                     <button type="submit">Iniciar Sesion</button>
                 </form>
             <% } else { %>
                 <h1>Bienvenido <%= user.username %></h1>
+                <form action="\logout" method="post">
+                    <button href="\">Logout</button>
+                </form>
+                
             <% } %>
             <img src="assets/images/blank_avatar.png" alt="Avatar" class="avatar">
             <h1>Marketzet</h1>
@@ -29,19 +33,27 @@
         <div class="search-bar">
         <form action="/busqueda" method="get">
             <input type="text" placeholder="Buscar..." name="searchInput" id="searchInput">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categorías
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" onclick="updateCategoria('Deportes')" >Deportes</a>
+                    <a class="dropdown-item" onclick="updateCategoria('Tecnologia')" >Tecnologia</a>
+                    <a class="dropdown-item" onclick="updateCategoria('Herramientas')" >Herramientas</a>
+                    <a class="dropdown-item" onclick="updateCategoria('Moda')" >Moda</a>
+                    <!-- Agrega más categorías según sea necesario -->
+                </div>
+            </div>
+            <input type="hidden" name="categoria" value="" id ="IdCategoria"\>
             <button type="submit">Buscar</button>
         </form>
-        </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Categorías
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Categoría 1</a>
-                <a class="dropdown-item" href="#">Categoría 2</a>
-                <a class="dropdown-item" href="#">Categoría 3</a>
-                <!-- Agrega más categorías según sea necesario -->
-            </div>
+        <script>
+            function updateCategoria(categoria) {
+                document.getElementById('IdCategoria').value = categoria; // Actualiza el valor del campo oculto con la categoría seleccionada
+                console.log(categoria);
+            }
+        </script>
         </div>
     </div>
 </header>
@@ -55,7 +67,7 @@
                 <% if (producto.imagen !== null) { %>
                     <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto.imagen, 'binary').toString('base64') %>" alt="<%= producto.nombre_producto %>">
                 <% } else { %>
-                    <img src="">
+                    <img src="assets/images/default_product.jpg">
                 <% } %>
                 <h3><%= producto.nombre_producto %></h3>
                 <p><%= producto.descripcion %></p>
