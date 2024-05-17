@@ -17,7 +17,9 @@
     <div class="navbar">
         <div class="logo">
             <% if (typeof user === 'undefined' || user.length === 0) { %>
-                <h1></h1>
+                <form action="\login">
+                    <button type="submit">Iniciar Sesion</button>
+                </form>
             <% } else { %>
                 <h1>Bienvenido <%= user.username %></h1>
             <% } %>

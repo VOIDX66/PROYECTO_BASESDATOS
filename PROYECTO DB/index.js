@@ -1,7 +1,7 @@
 //Importar libreria::::::::::::::::::::::::::::::::::::::::::::
-const express = require('express');
+const express = require('express'); 
 const mysql = require('mysql2');
-const session = require('express-session');
+const session = require('express-session'); //middleware
 
 //Objetos :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const app = express();
@@ -17,6 +17,7 @@ app.use(express.static("public"));//RUTA
 //Siempre cuando usemos datos que vengan de paginas
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
+//Almacenamiento de sesiones de usuarios
 app.use(session({
     secret: 'mi-secreto',
     resave: false,
@@ -27,6 +28,7 @@ app.use(session({
 
 //RUTAS::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+//Ruta principal
 app.get("/", function(req, res) {
     connection.query("SELECT * FROM PRODUCTO", (error, productos) => {
         if (error) {
@@ -39,10 +41,12 @@ app.get("/", function(req, res) {
     });
 });
 
+//Renderizado de la vista del formulario de registro
 app.get("/register",function(req,res){
     res.render("register");
 });
 
+//Validacion de datos para crear usuario
 app.post("/validar_registro",function(req,res){
     const data = req.body;
     let username = data.username;
@@ -54,15 +58,27 @@ app.post("/validar_registro",function(req,res){
             throw err;
         }else{
             console.log("Data saved successfully");
-            res.redirect("/");
+            let get_id = `SELECT * FROM usuario WHERE nombre_usuario = '${username}' AND contrase_usuario = '${pass}'`;
+            connection.query(get_id,function(err,usuario){
+                req.session.user = {
+                    id: usuario[0].id_usuario,
+                    username: usuario[0].nombre_usuario
+                };
+                console.log(usuario[0]);
+                //La redireccion debe de estar dentro de la consulta para que esta funcione
+                res.redirect("/");
+            });
         }
     }); 
 });
 
+//Renderizado de la vista del formulario de inicio de sesion
 app.get("/login",function(req,res){
     res.render("login");
 });
 
+
+// Validacion de los datos de inicio de sesion
 app.post('/validar_login', (req, res) => {
     const data = req.body;
     let username = data.username;
@@ -85,6 +101,21 @@ app.post('/validar_login', (req, res) => {
     });
 });
 
+
+// Cierre de la sesion destruyendo la sesion
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error al cerrar sesión:', err);
+            return res.redirect('/');
+        }
+        res.clearCookie('connect.sid'); // Nombre de la cookie por defecto usada por express-session
+        //res.redirect('/login');
+        res.redirect('/');
+    });
+});
+
+// Busqueda de los productos
 app.get('/busqueda', (req, res) => {
     const producto_buscado = req.query.searchInput;
     const busqueda = `SELECT * FROM PRODUCTO WHERE nombre_producto LIKE "%${producto_buscado}%"`;
@@ -93,7 +124,8 @@ app.get('/busqueda', (req, res) => {
             throw err;
         } else{
             if (productos.length > 0) {
-                res.render("index", { productos });
+                const user = req.session.user;
+                res.render("index", { productos, user });
                 console.log(productos);
             }
         }
