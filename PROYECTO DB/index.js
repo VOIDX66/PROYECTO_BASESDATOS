@@ -1,6 +1,7 @@
 //Importar libreria::::::::::::::::::::::::::::::::::::::::::::
 const express = require('express');
 const mysql = require('mysql2');
+const session = require('express-session');
 
 //Objetos :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const app = express();
@@ -16,6 +17,13 @@ app.use(express.static("public"));//RUTA
 //Siempre cuando usemos datos que vengan de paginas
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
+app.use(session({
+    secret: 'mi-secreto',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Asegúrate de configurar esto en 'true' en producción con HTTPS
+}));
+
 
 //RUTAS::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -24,7 +32,9 @@ app.get("/", function(req, res) {
         if (error) {
             throw error;
         }
-        res.render("index", { productos });
+        const user = req.session.user;
+        console.log(user);
+        res.render("index", { productos, user });
         //console.log(productos)
     });
 });
@@ -63,6 +73,10 @@ app.post('/validar_login', (req, res) => {
             console.error('Error al verificar las credenciales:', err);
         } else {
             if (results.length > 0) {
+                req.session.user = {
+                    id: results[0].id_usuario,
+                    username: results[0].nombre_usuario
+                };
                 res.redirect('/');
             } else {
                 res.render('login', { error: 'Credenciales incorrectas. Por favor, intenta de nuevo.' });
@@ -73,7 +87,7 @@ app.post('/validar_login', (req, res) => {
 
 app.get('/busqueda', (req, res) => {
     const producto_buscado = req.query.searchInput;
-    const busqueda = `SELECT * FROM PRODUCTO WHERE nombre_producto = "${producto_buscado}"`;
+    const busqueda = `SELECT * FROM PRODUCTO WHERE nombre_producto LIKE "%${producto_buscado}%"`;
     connection.query(busqueda,(err, productos ) => {
         if (err) {
             throw err;
