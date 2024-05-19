@@ -21,7 +21,7 @@ CREATE TABLE PRODUCTO (
     precio_unidad INT NOT NULL,
     cantidad_disp INT NOT NULL,
     comentarios VARCHAR(2000),
-    imagen BLOB,
+    imagen  LONGBLOB,
     PRIMARY KEY (id_producto),
     FOREIGN KEY (id_categoria)
         REFERENCES CATEGORIA (id_categoria)
@@ -72,6 +72,17 @@ CREATE TABLE CONTENIDO_COMPRA (
 		REFERENCES COMPRA(id_compra),
 	FOREIGN KEY (id_producto)
 		REFERENCES PRODUCTO(id_producto)
+);
+
+CREATE TABLE COMENTARIO (
+	id_comentario INT PRIMARY KEY AUTO_INCREMENT,
+    id_producto INT,
+    id_usuario INT,
+    contenido VARCHAR(2000),
+    FOREIGN KEY (id_producto)
+		REFERENCES PRODUCTO(id_producto),
+	FOREIGN KEY (id_usuario)
+		REFERENCES USUARIO(id_usuario)
 );
 
 

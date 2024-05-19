@@ -17,58 +17,61 @@
 
 /* Estilos para el encabezado */
 header {
-    background-color: #333;
+    padding-bottom: 20px;
+    background-color: #3e4cc7;
     color: #fff;
-    padding: 40px 20px;
     position: relative; /* Para posicionar correctamente la foto de perfil */
 }
 
-.navbar {
+.navbar{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-.logo h1 {
-    font-size: 24px;
+.titulo {
+    margin-top: 10px;
+    margin-left: 80px;
 }
 
-.logo img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
+.search{
+    display: inline-flexbox;
+    width: auto;
 }
 
-.search-bar {
-    position: relative; /* Para posicionar correctamente la foto de perfil */
+.search .categorias{
+    display: inline-flex;
+    width: 30%;
 }
 
-.user-avatar {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+
+.search .categorias button{
+    background-color: transparent;
+    border: 0;
 }
 
-.search-bar input[type="text"] {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 60px; /* Ajustar el margen derecho para dejar espacio para la foto de perfil */
+.search .categorias button:hover{
+    background-color: rgb(11, 28, 182);
+    border: 0;
+    transition: background-color 0.3s;
 }
 
-.search-bar button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.search .categorias button:active{
+    border: 0;
+    border-color: #3e4cc7;
+    transition: background-color 0.3s;
 }
+
+.search .search-bar{
+    display: inline-flex;
+}
+
+.login_register{
+    display: inline-flex;
+}
+
+.login_register button{
+    margin: 5px;
+}
+
 
 /* Estilos para el contenido principal */
 #mainContent {

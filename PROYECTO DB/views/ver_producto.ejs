@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketzet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/ver_producto.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <div class="titulo">
+                <h1><a href="/" style="text-decoration: none; color: inherit;">MARKET-ZET</a></h1>
+            </div>
+            <div class="search">
+                <form action="/busqueda" method="get">
+                    <div class="categorias">
+                        <div class="dropdown">
+                            <input type="hidden" name="categoria" value="" id ="IdCategoria"\>
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Categorías
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" onclick="updateCategoria('Deportes')" >Deportes</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Tecnologia')" >Tecnologia</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Herramientas')" >Herramientas</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Moda')" >Moda</a>
+                                <!-- Agrega más categorías según sea necesario -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Buscar..." name="searchInput" id="searchInput">
+                    </div>
+                    <button type="submit">Buscar</button>
+                    <script>
+                        function updateCategoria(categoria) {
+                            document.getElementById('IdCategoria').value = categoria; // Actualiza el valor del campo oculto con la categoría seleccionada
+                            console.log(categoria);
+                        }
+                    </script> 
+                </form>  
+            </div>
+            <div class="login_register">
+                <% if (typeof user === 'undefined' || user.length === 0) { %>
+                    <form action="\login" method="get">
+                        <button type="submit">Iniciar Sesion</button>
+                    </form>
+                    <form action="\register" method="get">
+                        <button type="submit">Registrarse</button>
+                    </form>
+                <% } else { %>
+                    <h1>Bienvenido <%= user.username %></h1>
+                    <form action="\logout" method="post">
+                        <button href="\">Logout</button>
+                    </form>
+                    
+                <% } %>
+            </div>
+        </div>
+    </header>
+
+    <div class="seleccion_producto">
+        <% if (typeof producto_encontrado === 'undefined' || producto_encontrado.length === 0) { %>
+            <div class="alert-danger">ERROR PRODUCTO NO ENCONTRADO</div>
+            <% } else { %>
+                <div class="product">
+                    <% if (producto_encontrado.imagen !== null) { %>
+                        <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto_encontrado.imagen, 'binary').toString('base64') %>" alt="<%= producto_encontrado.nombre_producto %>">
+                    <% } else { %>
+                        <img src="assets/images/default_product.jpg">
+                    <% } %>
+                    <h3><%= producto_encontrado.nombre_producto %></h3>
+                    <p><%= producto_encontrado.descripcion %></p>
+                    <p>Precio: $<%= producto_encontrado.precio_unidad %></p>
+                
+                    <form action="/login" id="iniciar_s" method="get"></form>
+                    <form action="/comprar" method="post">
+                        <p>Cantidad disponible: <%= producto_encontrado.cantidad_disp  %></p>
+                        <input type="number" id="numero" name="numero" min="0" max="<%= producto_encontrado.cantidad_disp%>">
+                        <input type="hidden" name="id_producto" id="id_producto" value="<%= producto_encontrado.id_producto %>">
+                        
+                        <% if (typeof user === 'undefined' || user.length === 0) { %>
+                                <button id="comprar" disabled type="submit" form="iniciar_s">Comprar</button>
+                        <% } else { %>
+                            <button id="comprar" disabled type="submit">Comprar</button>
+                        <% } %>
+                        <script>
+                            // Obtener referencia al campo de entrada y al botón
+                            const numeroInput = document.getElementById('numero');
+                            const boton = document.getElementById('comprar');
+                    
+                            // Agregar un listener para detectar cambios en el campo de entrada
+                            numeroInput.addEventListener('input', function() {
+                                // Obtener el valor actual del campo de entrada como un número entero
+                                const valor = parseInt(numeroInput.value, 10);
+                    
+                                // Verificar si el valor está dentro del rango permitido
+                                if (valor < parseInt(numeroInput.min, 10) || valor > parseInt(numeroInput.max, 10)) {
+                                    // Si está fuera del rango, deshabilitar el botón
+                                    boton.disabled = true;
+                                } else {
+                                    // Si está dentro del rango, habilitar el botón
+                                    if(valor == 0 || numeroInput.value === "")
+                                    {
+                                        boton.disabled = true;
+                                    }else{
+                                        boton.disabled = false;
+                                    }
+                                }
+                            });
+                        </script>
+                    </form>
+
+                    <% if (typeof user === 'undefined' || user.length === 0) { %>
+                        
+                    <% } else { %>
+                    <h1>Comentar</h1>
+                    <form action="/comentar" method="post">
+                        <input type="text" name="contenido" id="contenido" required>
+                        <input type="hidden" name="id_producto" id="id_producto" value="<%= producto_encontrado.id_producto %>">
+                        <button type="submit">Comentar</button>
+                    </form>
+                    <% } %>
+                    Comentarios
+                    <% if (typeof comentarios === 'undefined' || comentarios.length === 0) { %>
+                        <div class="alert-danger">No hay comentarios.</div>
+                    <% } else { %>
+                        <% comentarios.forEach(comentario => { %>
+                            <br>
+                            <h2><%= comentario.nombre_usuario %></h2>
+                            <p><%= comentario.contenido  %></p>
+                            <br>
+                            
+                        <% }); %>
+                    <% } %>
+            <% } %>
+    </div>
+    
+    <br>
+    <br>
+    <br>
+
+    <footer>
+        <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>
+

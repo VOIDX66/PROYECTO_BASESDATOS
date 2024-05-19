@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketzet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/index.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="titulo">
+                <h1><a href="/" style="text-decoration: none; color: inherit;">MARKET-ZET</a></h1>
+            </div>
+            
+            <div class="login_register">
+                <% if (typeof user === 'undefined' || user.length === 0) { %>
+                    
+                <% } else { %>
+                    <h1>Bienvenido <%= user.username %></h1>
+                    <form action="\logout" method="post">
+                        <button href="\">Logout</button>
+                    </form>
+                    
+                <% } %>
+            </div>
+        </div>
+    </header>
+    <h1>Eliminar Producto</h1>
+
+<footer>
+    <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

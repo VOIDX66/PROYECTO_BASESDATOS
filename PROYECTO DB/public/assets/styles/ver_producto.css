@@ -1,0 +1,86 @@
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.dropdown{
+    margin-right: 50px;
+}
+
+.product img {
+    width: 50%; /* Ancho fijo */
+    height: 50%; /* Alto fijo */
+    object-fit: cover; /* Ajusta la imagen manteniendo su relación de aspecto */
+}
+
+/* Estilos para el encabezado */
+header {
+    padding-bottom: 20px;
+    background-color: #3e4cc7;
+    color: #fff;
+    position: relative; /* Para posicionar correctamente la foto de perfil */
+}
+
+.navbar{
+    display: flex;
+}
+
+.titulo {
+    margin-top: 10px;
+    margin-left: 80px;
+}
+
+.search{
+    display: inline-flexbox;
+    width: auto;
+}
+
+.search .categorias{
+    display: inline-flex;
+    width: 30%;
+}
+
+
+.search .categorias button{
+    background-color: transparent;
+    border: 0;
+}
+
+.search .categorias button:hover{
+    background-color: rgb(11, 28, 182);
+    border: 0;
+    transition: background-color 0.3s;
+}
+
+.search .categorias button:active{
+    border: 0;
+    border-color: #3e4cc7;
+    transition: background-color 0.3s;
+}
+
+.search .search-bar{
+    display: inline-flex;
+}
+
+.login_register{
+    display: inline-flex;
+}
+
+.login_register button{
+    margin: 5px;
+}
+
+
+
+/* Estilos para el pie de página */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

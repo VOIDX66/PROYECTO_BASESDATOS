@@ -2,6 +2,11 @@
 const express = require('express'); 
 const mysql = require('mysql2');
 const session = require('express-session'); //middleware
+const multer = require('multer');
+const path = require('path');
+const { render } = require('ejs');
+const fs = require('fs');
+
 
 //Objetos :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const app = express();
@@ -11,13 +16,30 @@ const connection = mysql.createConnection({
     user: "root",
     password: "1234"
 });
+
+const uploadDir = 'public/assets/images/';
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage : storage});
 //aplicaciones:::::::::::::::::::::::::::::::::::::::::::::::::
 app.set("view engine", "ejs");
 app.use(express.static("public"));//RUTA
 //Siempre cuando usemos datos que vengan de paginas
 app.use(express.json());
-app.use(express.urlencoded({extended:false}))
+app.use(express.urlencoded({extended:true}))
 //Almacenamiento de sesiones de usuarios
+
 app.use(session({
     secret: 'mi-secreto',
     resave: false,
@@ -35,9 +57,16 @@ app.get("/", function(req, res) {
             throw error;
         }
         const user = req.session.user;
-        //console.log(user);
-        res.render("index", { productos, user });
-        //console.log(productos)
+        if (typeof user === 'undefined' || user.length === 0) {
+            res.render("index", { productos, user });
+        } else {
+            if (user.tipo_usuario == "administrador") {
+                res.render("administracion", { productos, user });
+            } else {
+                res.render("index", { productos, user });
+            }
+        }
+
     });
 });
 
@@ -98,7 +127,7 @@ app.post('/validar_login', (req, res) => {
                 const user = req.session.user;
                 let ruta = "/";
                 if (user.tipo_usuario == "administrador") {
-                    ruta = "/gestion";
+                    ruta = "/administracion";
                 }
                 res.redirect(ruta);
             } else {
@@ -140,11 +169,15 @@ app.get('/busqueda', (req, res) => {
             throw err;
         } else{
             if (typeof user === 'undefined' || user.length === 0) {
-                //
+                if (productos.length > 0) {
+                    res.render("index", { productos, user });
+                }else{
+                    res.render("index", { user });
+                } 
             }else{
                 let ruta = "index";
                 if (user.tipo_usuario == "administrador"){
-                    ruta = "gestion_productos";
+                    ruta = "administracion";
                 }
                 if (productos.length > 0) {
                     res.render(ruta, { productos, user });
@@ -156,16 +189,118 @@ app.get('/busqueda', (req, res) => {
     });
 });
 
-app.get("/gestion",function(req,res){
+app.get("/administracion",function(req,res){
+    const user = req.session.user;
+    if (typeof user === 'undefined' || user.length === 0) {
+        res.redirect("/")
+    } else {
+        if(user.tipo_usuario == "administrador") {
+            res.render("administracion", { user });
+        }
+        else{
+            res.redirect("/")
+        }
+    }
+});
+
+app.get("/ver_producto",function(req,res){
+
+    const producto_seleccionado = req.query.id_producto;
+    //console.log(`id_producto: ${producto_seleccionado}`);
+    connection.query(`SELECT * FROM PRODUCTO WHERE id_producto = "${producto_seleccionado}"`, (error, producto) => {
+        if (error) {
+            throw error;
+        }else{
+            const user = req.session.user;
+            let producto_encontrado = producto[0];
+            const comentarios = `SELECT C.contenido, U.nombre_usuario FROM COMENTARIO C JOIN USUARIO U ON C.id_usuario = U.id_usuario `+
+                                `WHERE id_producto = "${producto_encontrado.id_producto}"`;
+            connection.query(comentarios, (err, comentarios) => {
+                if (err){
+                    throw err;
+                }else{
+                    if (typeof user === 'undefined' || user.length === 0) {
+                        res.render("ver_producto", {producto_encontrado, comentarios});
+                    }else{
+                        res.render("ver_producto", {producto_encontrado, user, comentarios });    
+                    }
+                }
+            });   
+        }
+    });
+});
+
+app.post("/comentar",function(req,res){
+    const comentario = req.body;
+    //console.log(comentario);
+    const user = req.session.user;
+    if (typeof user === 'undefined' || user.length === 0) {
+    }else{
+        insert_coment = `INSERT INTO COMENTARIO (id_producto, id_usuario, contenido) `+
+                        `VALUES (${comentario.id_producto},${user.id},"${comentario.contenido}")`;
+        connection.query(insert_coment, (err, rest)=>{
+            if(err){
+                throw err;
+            }else{
+                res.redirect(`/ver_producto?id_producto=${comentario.id_producto}`);
+            }
+         });
+    }
+});
+
+app.post("/nuevo_producto", upload.single('imagen'), (req, res) => {
+    try{
+        const producto = req.body;
+        const imageBuffer = fs.readFileSync(req.file.path);
+        const consulta =`INSERT INTO PRODUCTO (id_categoria, nombre_producto, descripcion, precio_unidad, cantidad_disp, imagen) `+
+                        `VALUES(?,?,?,?,?,?)`;
+        
+        connection.query(consulta,[producto.categoria,producto.nombre_producto,producto.descripcion,producto.precio_unidad,producto.cantidad_disp,imageBuffer], function(err, result) {
+            if (err) {
+                throw err;
+            }else{
+                res.render("administracion")
+            }
+        });
+    }catch(err){
+        console.log(err);
+    }
+});
+
+
+app.post("/add_producto",function(req,res){
+    res.render("add_producto");
+});
+
+
+
+app.post("/edit_producto",function(req,res){
     connection.query("SELECT * FROM PRODUCTO", (error, productos) => {
         if (error) {
             throw error;
         }
-        const user = req.session.user;
-        //console.log(user);
-        res.render("gestion_productos", { productos, user });
-        //console.log(productos)
+        res.render("edit_producto", { productos });
     });
+});
+
+app.post("/editar_producto",function(req,res){
+    const producto_seleccionado = req.body.id_producto;
+    connection.query(`SELECT * FROM PRODUCTO WHERE id_producto = "${producto_seleccionado}"`, (error, producto) => {
+        if (error) {
+            throw error;
+        }else{
+            let producto_encontrado = producto[0];
+            console.log(producto);
+            res.render('editar_producto', {producto_encontrado});
+        }
+    });
+});
+
+app.post("/aplicar_edicion_producto", (req, res) => {
+    });
+
+app.post("/delete_producto",function(req,res){
+    res.render("delete_producto");
 });
 
 //VALIDACION DE CONEXION CON LA BASE DE DATOS

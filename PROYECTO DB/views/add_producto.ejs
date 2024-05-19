@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketzet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/index.css">
+    <!-- Incluye jQuery y Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <!-- Incluye el JS de Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="titulo">
+                <h1><a href="/" style="text-decoration: none; color: inherit;">MARKET-ZET</a></h1>
+            </div>
+            
+            <div class="login_register">
+                <% if (typeof user === 'undefined' || user.length === 0) { %>
+                    
+                <% } else { %>
+                    <h1>Bienvenido <%= user.username %></h1>
+                    <form action="\logout" method="post">
+                        <button href="\">Logout</button>
+                    </form>
+                    
+                <% } %>
+            </div>
+        </div>
+    </header>
+    <h1>Añadir Producto</h1>
+
+    <form action="nuevo_producto" method="post" enctype="multipart/form-data">
+        <Label for="nombre_producto">Nombre Producto: </Label>
+        <input type="text" name="nombre_producto" id="nombre_producto" required>
+        <p>
+        <Label for="descripcion">Descripcion: </Label>
+        <textarea name="descripcion" id="descripcion" rows="1" cols="50"></textarea>
+        <p>
+        <Label for="precio_unidad">Precio Unidad: </Label>
+        <input type="number" name="precio_unidad" id="precio_unidad" min="0"></input>
+        <p>
+        <Label for="cantidad_disp">Cantidad disponible: </Label>
+        <input type="number" name="cantidad_disp" id="cantidad_disp" min="0"></input>
+        <p>
+        <label for="imagen">Imagen: </label>
+        <input type="file" name="imagen" id="imagen" accept="image/*" required>    
+        <p>
+        <div class="categorias">
+            <label for="categoria">Selecciona una categoria:</label>
+            <select id="categoria" name="categoria" required> 
+            <option value="1">Deportes</option>
+            <option value="2">Tecnologia</option>
+            <option value="3">Herramientas</option>
+            <option value="4">Moda</option>
+            <option value="5">Otra</option>
+            </select>
+        </div>
+        <p>
+        <button type="submit">Agregar</button>
+    </form>
+    
+
+
+<footer>
+    <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>
