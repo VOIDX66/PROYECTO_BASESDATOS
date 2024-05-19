@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketzet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/styles/index.css">
+    <!-- Incluye jQuery y Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <!-- Incluye el JS de Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="titulo">
+                <h1><a href="/" style="text-decoration: none; color: inherit;">MARKET-ZET</a></h1>
+            </div>
+        </div>
+    </header>
+    <h1>Comprar</h1>
+    <form action="/nueva_compra" method="post">
+        <Label for="metodo_pago">Metodo de pago: </Label>
+        <input type="text" name="metodo_pago" id="metodo_pago" required></input>
+        <Label for="direccion">Direccion Entrega: </Label>
+        <input type="text" name="direccion" id="direccion" required></input>
+        <p>
+        <Label for="numero">Numero contacto: </Label>
+        <input type="number" name="numero" id="numero" min="0" required></input>
+        <p>
+        <input type="hidden" name="id_carrito" id="id_carrito" value="<%= id_carrito %>">
+        <input type="hidden" name="" id="" value="">
+        <input type="hidden" name="" id="" value="">
+        <button type="submit">Comprar</button>
+    </form>
+<footer>
+    <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

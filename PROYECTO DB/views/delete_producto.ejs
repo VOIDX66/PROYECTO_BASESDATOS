@@ -16,22 +16,31 @@
             <div class="titulo">
                 <h1><a href="/" style="text-decoration: none; color: inherit;">MARKET-ZET</a></h1>
             </div>
-            
-            <div class="login_register">
-                <% if (typeof user === 'undefined' || user.length === 0) { %>
-                    
-                <% } else { %>
-                    <h1>Bienvenido <%= user.username %></h1>
-                    <form action="\logout" method="post">
-                        <button href="\">Logout</button>
-                    </form>
-                    
-                <% } %>
-            </div>
         </div>
     </header>
-    <h1>Eliminar Producto</h1>
-
+    <h1>Editar Producto</h1>
+    <main id="mainContent">
+        <% if (typeof productos === 'undefined' || productos.length === 0) { %>
+            <div class="alert-danger">No se encontraron productos.</div>
+        <% } else { %>
+            <% productos.forEach(producto => { %>
+                <div class="product">
+                    <% if (producto.imagen !== null) { %>
+                        <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto.imagen, 'binary').toString('base64') %>" alt="<%= producto.nombre_producto %>">
+                    <% } else { %>
+                        <img src="assets/images/default_product.jpg">
+                    <% } %>
+                    <h3><%= producto.nombre_producto %></h3>
+                    <p><%= producto.descripcion %></p>
+                    <p>Precio: $<%= producto.precio_unidad %></p>
+                    <form action="/eliminar_producto" method="post">
+                        <input type="hidden" value="<%= producto.id_producto %>" name="id_producto">
+                        <button type="submit">Eliminar Producto</button>
+                    </form>
+                </div>
+            <% }); %>
+        <% } %>
+    </main>
 <footer>
     <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
 </footer>

@@ -22,7 +22,7 @@
     <% if (typeof producto_encontrado === 'undefined' || producto_encontrado.length === 0) { %>
         <div class="alert-danger">No se encontraron productos.</div>
     <% } else { %>
-        <form action="nuevo_producto" method="post" enctype="multipart/form-data">
+        <form action="aplicar_edicion_producto" method="post" enctype="multipart/form-data">
             <Label for="nombre_producto">Nombre Producto: </Label>
             <input type="text" name="nombre_producto" id="nombre_producto" value="<%=producto_encontrado.nombre_producto%>" required>
             <p>
@@ -36,7 +36,7 @@
             <input type="number" name="cantidad_disp" id="cantidad_disp" min="0" value="<%=producto_encontrado.cantidad_disp%>"></input>
             <p>
             <label for="imagen">Imagen: </label>
-            <input type="file" name="imagen" id="imagen" accept="image/*" required value="<%=producto_encontrado.imagen%>">    
+            <input type="file" name="imagen" id="imagen" accept="image/*" value="<%=producto_encontrado.imagen%>">    
             <p>
             <div class="categorias">
                 <label for="categoria">Selecciona una categoria:</label>
@@ -49,12 +49,10 @@
                 </select>
             </div>
             <p>
+            <input type="hidden" name="id_producto" value="<%= producto_encontrado.id_producto %>">
             <button type="submit">Editar</button>
         </form>
     <% } %>
-
-
-
 <footer>
     <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
 </footer>

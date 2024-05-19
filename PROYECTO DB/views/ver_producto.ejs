@@ -59,7 +59,9 @@
                     <form action="\logout" method="post">
                         <button href="\">Logout</button>
                     </form>
-                    
+                    <form action="\carrito" method="get">
+                        <button>Carrito</button>
+                    </form>
                 <% } %>
             </div>
         </div>
@@ -88,6 +90,7 @@
                         <% if (typeof user === 'undefined' || user.length === 0) { %>
                                 <button id="comprar" disabled type="submit" form="iniciar_s">Comprar</button>
                         <% } else { %>
+                            <input type="hidden" value="<%= user.id %>" name="id_usuario">
                             <button id="comprar" disabled type="submit">Comprar</button>
                         <% } %>
                         <script>

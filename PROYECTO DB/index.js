@@ -290,19 +290,162 @@ app.post("/editar_producto",function(req,res){
             throw error;
         }else{
             let producto_encontrado = producto[0];
-            console.log(producto);
+            //console.log(producto);
             res.render('editar_producto', {producto_encontrado});
         }
     });
 });
 
-app.post("/aplicar_edicion_producto", (req, res) => {
-    });
+app.post("/aplicar_edicion_producto", upload.single('imagen'), (req, res) => {
+    try{
+        const producto = req.body;
+        let consulta;
+        try{
+            const imageBuffer = fs.readFileSync(req.file.path);
+            consulta =`UPDATE PRODUCTO SET nombre_producto = "${producto.nombre_producto}", descripcion = "${producto.descripcion}", precio_unidad = ${producto.precio_unidad},`+
+                      `cantidad_disp = ${producto.cantidad_disp}, imagen = ? `+
+                      `WHERE id_producto = ${producto.id_producto}`;
 
-app.post("/delete_producto",function(req,res){
-    res.render("delete_producto");
+            connection.query(consulta, [imageBuffer], function (err, result) {
+            if (err) {
+                throw err;
+            }else{
+                res.render('administracion');
+            }
+            });
+            
+        }catch{
+            console.log(producto);
+            consulta =`UPDATE PRODUCTO SET nombre_producto = "${producto.nombre_producto}", descripcion = "${producto.descripcion}", precio_unidad = ${producto.precio_unidad},`+
+                      `cantidad_disp = ${producto.cantidad_disp} `+
+                      `WHERE id_producto = ${producto.id_producto}`;
+
+            connection.query(consulta, function (err, result) {
+            if (err) {
+                throw err;
+            }else{
+                res.render('administracion');
+            }
+            });
+        }
+        connection.query(consulta, [imageBuffer], function (err, result) {
+            if (err) {
+                throw err;
+            }else{
+                res.render('administracion');
+            }
+        });
+       
+    }catch(err){
+        console.log(err);
+    }
 });
 
+app.post("/delete_producto",function(req,res){
+    connection.query("SELECT * FROM PRODUCTO", (error, productos) => {
+        if (error) {
+            throw error;
+        }
+        res.render("delete_producto", { productos });
+    });
+});
+
+app.post('/eliminar_producto', (req, res) => {
+    const producto = req.body.id_producto;
+    connection.query(`DELETE FROM PRODUCTO WHERE id_producto = ${producto}`, (error, respuesta) => {
+        if (error) {
+            throw error;
+        }
+        else{
+            res.render("administracion");
+        }
+    });
+});
+
+app.get("/carrito", function(req, res) {
+    const user = req.session.user;
+        if (typeof user === 'undefined' || user.length === 0) {
+            res.redirect("/")
+        }else{
+            connection.query(`SELECT * FROM USUARIO U `+
+                            `JOIN CARRITO C ON U.id_usuario = C.id_usuario JOIN PRODUCTO_CARRITO PC `+
+                            `ON PC.id_carrito = C.id_carrito JOIN PRODUCTO P `+
+                            `ON P.id_producto = PC.id_producto WHERE U.id_usuario = ${user.id}`, (error, productos) => {
+                if (error) {
+                    throw error;
+                }else{
+                    res.render("carrito",{productos,});
+                }
+            });
+        } 
+});
+
+app.post("/quitar_producto", function (req, res) {
+    const producto = req.body.id_producto;
+    const carrito = req.body.id_carrito;
+    connection.query(`DELETE FROM producto_carrito WHERE id_carrito = ${carrito} AND id_producto = ${producto}`, function (error, respuesta){
+        if (error) {
+            throw error;
+        }else{
+            res.redirect("/carrito");
+        }           
+    });
+});
+
+app.post("/comprar", function (req, res) {
+    const producto = req.body.id_producto;
+    const usuario = req.body.id_usuario;
+    const cantidad = req.body.numero;
+    connection.query(`SELECT * FROM CARRITO WHERE id_usuario = ${usuario}`, function (error, carrito){
+        if (error) {
+            throw error;
+        }else{
+            const id_carrito = carrito[0].id_carrito;
+            connection.query(`INSERT INTO PRODUCTO_CARRITO (id_carrito, id_producto, cantidad_producto_c) VALUES (${id_carrito},${producto},${cantidad})`, function(err, resultado){
+                if(err){
+                    throw err;
+                }else{
+                    res.redirect("/carrito")
+                }
+            });    
+        }
+    });
+});
+
+app.post("/datos_comprar", function(req, res){
+    const id_carrito = req.body.id_carrito;
+    res.render("comprar",{id_carrito});
+});
+
+app.post("/nueva_compra", function (req, res) {
+    const pago = req.body.metodo_pago;
+    const direccion = req.body.direccion;
+    const numero = req.body.numero;
+    const user = req.session.user;
+    const carrito = req.body.id_carrito;
+    if (typeof user === 'undefined' || user.length === 0) {
+
+    }else{  
+        connection.query(`INSERT INTO COMPRA (id_usuario,id_carrito,metodo_pago,fecha_pedido,direccion_entrega,n_contacto) `+
+                            `VALUES (${user.id},${carrito},"${pago}",CURRENT_DATE,"${direccion}",${numero})`,function (error,resultado){
+            if (error){
+                throw error;
+            }else{
+                res.render("confimar_cancelar", {carrito});
+            }
+        });
+    }
+});
+
+app.get('/confirmar_cancelar', function(err,res) {
+    res.render("confirmar_cancelar");
+});
+
+app.post('/completar_compra', function(err,res) {
+});
+
+app.post('/cancelar_compra', function(err,res) {
+});
 //VALIDACION DE CONEXION CON LA BASE DE DATOS
 connection.connect(function(err){
     if(err){
