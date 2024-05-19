@@ -1,10 +1,15 @@
 
-<input type="hidden" name="id_carrito" id="id_usuario" value="<%= ${id_carrito}%>">
+
+
+
+
 <h1>Validar Compra</h1>
-<form action="\completar_compra">
+<form action="\completar_compra" method="post">
+    <input type="hidden" name="id_carrito" id="id_carrito" value="<%= carrito  %>">
     <button>Validar</button>    
 </form>
-<form action="\cancelar_compra">
+<form action="\cancelar_compra" method="post">
+    <input type="hidden" name="id_carrito" id="id_carrito" value="<%= carrito  %>">
     <button>Cancelar</button>
 </form>
 <h1>Cancelar Compra</h1>

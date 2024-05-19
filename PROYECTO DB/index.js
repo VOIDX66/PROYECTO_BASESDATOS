@@ -374,7 +374,7 @@ app.get("/carrito", function(req, res) {
                 if (error) {
                     throw error;
                 }else{
-                    res.render("carrito",{productos,});
+                    res.render("carrito",{productos});
                 }
             });
         } 
@@ -431,20 +431,46 @@ app.post("/nueva_compra", function (req, res) {
             if (error){
                 throw error;
             }else{
-                res.render("confimar_cancelar", {carrito});
+                res.render("confirmar_cancelar", {carrito});
             }
         });
     }
 });
 
-app.get('/confirmar_cancelar', function(err,res) {
-    res.render("confirmar_cancelar");
+app.post('/completar_compra', function(req,res) {
+    carrito = req.body.id_carrito;
+    connection.query(`SELECT id_compra FROM COMPRA WHERE id_carrito = ${carrito} AND estado = "ENPROCESO" ORDER BY id_compra DESC`, function(err,compra){
+        if(err){
+            throw err;
+        }else{
+            const id_compra = compra[0].id_compra;
+            connection.query(`UPDATE COMPRA SET estado = "COMPLETADA" WHERE id_compra = ${id_compra}`, function(error, resultado){
+                if(error){
+                    throw error;
+                }else{
+                    res.redirect('/carrito');
+                }
+            });
+        }
+    });
 });
 
-app.post('/completar_compra', function(err,res) {
-});
-
-app.post('/cancelar_compra', function(err,res) {
+app.post('/cancelar_compra', function(req,res) {
+    carrito = req.body.id_carrito;
+    connection.query(`SELECT id_compra FROM COMPRA WHERE id_carrito = ${carrito} AND estado = "ENPROCESO" ORDER BY id_compra DESC`, function(err,compra){
+        if(err){
+            throw err;
+        }else{
+            const id_compra = compra[0].id_compra;
+            connection.query(`UPDATE COMPRA SET estado = "CANCELADA" WHERE id_compra = ${id_compra}`, function(error, resultado){
+                if(error){
+                    throw error;
+                }else{
+                    res.redirect('/carrito');
+                }
+            });
+        }
+    });
 });
 //VALIDACION DE CONEXION CON LA BASE DE DATOS
 connection.connect(function(err){
