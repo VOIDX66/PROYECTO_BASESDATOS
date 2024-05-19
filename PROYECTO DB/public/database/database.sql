@@ -173,7 +173,9 @@ VALUES ('ADMIN', 'example@ex2ample.com', '321', 'administrador');
 INSERT INTO USUARIO (nombre_usuario, email_usuario, contrase_usuario, tipo_usuario)
 VALUES ('Jose', 'user@e2ample.com', '123', 'cliente');
 
-INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Deportes");
-INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Tecnologia");
-INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Herramientas");
-INSERT INTO CATEGORIA (nombre_categoria) VALUES ("Moda");
+INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (1,"Deportes");
+INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (2,"Tecnologia");
+INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (3,"Herramientas");
+INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (4,"Moda");
+
+INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (5,"Otra");

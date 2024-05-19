@@ -431,7 +431,16 @@ app.post("/nueva_compra", function (req, res) {
             if (error){
                 throw error;
             }else{
-                res.render("confirmar_cancelar", {carrito});
+                connection.query(`SELECT * FROM COMPRA WHERE id_carrito = ${carrito} AND estado = "ENPROCESO" ORDER BY id_compra DESC`, function(err,compra){
+                    if (err){
+                        throw err;
+                    }else{
+                        let total = compra[0].precio_total;
+                        res.render("confirmar_cancelar", {carrito,total});
+                    }
+                    
+                });
+                
             }
         });
     }
