@@ -352,14 +352,27 @@ app.post("/delete_producto",function(req,res){
 
 app.post('/eliminar_producto', (req, res) => {
     const producto = req.body.id_producto;
-    connection.query(`DELETE FROM PRODUCTO WHERE id_producto = ${producto}`, (error, respuesta) => {
-        if (error) {
-            throw error;
+
+    connection.query(`DELETE FROM COMENTARIO WHERE id_producto = ${producto}`, (err, ress) => {
+        if(err){
+            throw err;
+        }else{
+            connection.query(`DELETE FROM CONTENIDO_COMPRA WHERE id_producto = ${producto}`, (erc, resc) => {
+                if (erc){
+                    throw erc;
+                }else{
+                    connection.query(`DELETE FROM PRODUCTO WHERE id_producto = ${producto}`, (error, respuesta) => {
+                        if (error) {
+                            throw error;
+                        }
+                        else{
+                            res.render("administracion");
+                        }
+                    });
+                }
+            });
         }
-        else{
-            res.render("administracion");
-        }
-    });
+    }); 
 });
 
 app.get("/carrito", function(req, res) {

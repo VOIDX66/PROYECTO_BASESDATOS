@@ -177,5 +177,4 @@ INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (1,"Deportes");
 INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (2,"Tecnologia");
 INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (3,"Herramientas");
 INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (4,"Moda");
-
 INSERT INTO CATEGORIA (id_categoria, nombre_categoria) VALUES (5,"Otra");
