@@ -315,7 +315,7 @@ app.post("/aplicar_edicion_producto", upload.single('imagen'), (req, res) => {
             });
             
         }catch{
-            console.log(producto);
+            //console.log(producto);
             consulta =`UPDATE PRODUCTO SET nombre_producto = "${producto.nombre_producto}", descripcion = "${producto.descripcion}", precio_unidad = ${producto.precio_unidad},`+
                       `cantidad_disp = ${producto.cantidad_disp} `+
                       `WHERE id_producto = ${producto.id_producto}`;
@@ -328,14 +328,6 @@ app.post("/aplicar_edicion_producto", upload.single('imagen'), (req, res) => {
             }
             });
         }
-        connection.query(consulta, [imageBuffer], function (err, result) {
-            if (err) {
-                throw err;
-            }else{
-                res.render('administracion');
-            }
-        });
-       
     }catch(err){
         console.log(err);
     }
