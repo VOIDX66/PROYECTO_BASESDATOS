@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketzet</title>
+    <title>Marketzet - Ver Producto</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/styles/ver_producto.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -11,7 +11,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-
     <header>
         <div class="navbar">
             <div class="titulo">
@@ -21,15 +20,15 @@
                 <form action="/busqueda" method="get">
                     <div class="categorias">
                         <div class="dropdown">
-                            <input type="hidden" name="categoria" value="" id ="IdCategoria"\>
+                            <input type="hidden" name="categoria" value="" id="IdCategoria">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Categorías
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" onclick="updateCategoria('Deportes')" >Deportes</a>
-                                <a class="dropdown-item" onclick="updateCategoria('Tecnologia')" >Tecnologia</a>
-                                <a class="dropdown-item" onclick="updateCategoria('Herramientas')" >Herramientas</a>
-                                <a class="dropdown-item" onclick="updateCategoria('Moda')" >Moda</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Deportes')">Deportes</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Tecnologia')">Tecnologia</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Herramientas')">Herramientas</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Moda')">Moda</a>
                                 <!-- Agrega más categorías según sea necesario -->
                             </div>
                         </div>
@@ -37,22 +36,22 @@
                     <div class="search-bar">
                         <input type="text" placeholder="Buscar..." name="searchInput" id="searchInput">
                     </div>
-                    <button type="submit">Buscar</button>
+                    <button type="submit" class="btn-head">Buscar</button>
                     <script>
                         function updateCategoria(categoria) {
                             document.getElementById('IdCategoria').value = categoria; // Actualiza el valor del campo oculto con la categoría seleccionada
                             console.log(categoria);
                         }
-                    </script> 
-                </form>  
+                    </script>
+                </form>
             </div>
             <div class="login_register">
                 <% if (typeof user === 'undefined' || user.length === 0) { %>
                     <form action="\login" method="get">
-                        <button type="submit">Iniciar Sesion</button>
+                        <button type="submit" class="btn-head">Iniciar Sesión</button>
                     </form>
                     <form action="\register" method="get">
-                        <button type="submit">Registrarse</button>
+                        <button type="submit" class="btn-head">Registrarse</button>
                     </form>
                 <% } else { %>
                     <h1>Bienvenido <%= user.username %></h1>
@@ -67,31 +66,34 @@
         </div>
     </header>
 
-    <div class="seleccion_producto">
-        <% if (typeof producto_encontrado === 'undefined' || producto_encontrado.length === 0) { %>
-            <div class="alert-danger">ERROR PRODUCTO NO ENCONTRADO</div>
+    <main class="container mt-4 flex-grow-1">
+        <div class="seleccion_producto row">
+            <% if (typeof producto_encontrado === 'undefined' || producto_encontrado.length === 0) { %>
+                <div class="alert-danger col-12">ERROR PRODUCTO NO ENCONTRADO</div>
             <% } else { %>
-                <div class="product">
+                <div class="product col-md-6">
                     <% if (producto_encontrado.imagen !== null) { %>
-                        <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto_encontrado.imagen, 'binary').toString('base64') %>" alt="<%= producto_encontrado.nombre_producto %>">
+                        <img class="img_pro img-fluid" src="<%= 'data:image/png;base64,' + Buffer.from(producto_encontrado.imagen, 'binary').toString('base64') %>" alt="<%= producto_encontrado.nombre_producto %>">
                     <% } else { %>
-                        <img src="assets/images/default_product.jpg">
+                        <img src="assets/images/default_product.jpg" class="img-fluid">
                     <% } %>
+                </div>
+                <div class="col-md-6">
                     <h3><%= producto_encontrado.nombre_producto %></h3>
                     <p><%= producto_encontrado.descripcion %></p>
-                    <p>Precio: $<%= producto_encontrado.precio_unidad %></p>
+                    <p>Precio: $<%= producto_encontrado.precio_unidad.toLocaleString() %></p>
                 
                     <form action="/login" id="iniciar_s" method="get"></form>
                     <form action="/comprar" method="post">
-                        <p>Cantidad disponible: <%= producto_encontrado.cantidad_disp  %></p>
-                        <input type="number" id="numero" name="numero" min="0" max="<%= producto_encontrado.cantidad_disp%>">
+                        <p>Cantidad disponible: <%= producto_encontrado.cantidad_disp %></p>
+                        <input type="number" id="numero" name="numero" min="1" max="<%= producto_encontrado.cantidad_disp %>" class="form-control mb-3">
                         <input type="hidden" name="id_producto" id="id_producto" value="<%= producto_encontrado.id_producto %>">
                         
                         <% if (typeof user === 'undefined' || user.length === 0) { %>
-                                <button id="comprar" disabled type="submit" form="iniciar_s">Comprar</button>
+                            <button id="comprar" disabled type="submit" form="iniciar_s" class="btn btn-primary">Comprar</button>
                         <% } else { %>
                             <input type="hidden" value="<%= user.id %>" name="id_usuario">
-                            <button id="comprar" disabled type="submit">Comprar</button>
+                            <button id="comprar" disabled type="submit" class="btn btn-primary">Comprar</button>
                         <% } %>
                         <script>
                             // Obtener referencia al campo de entrada y al botón
@@ -109,50 +111,43 @@
                                     boton.disabled = true;
                                 } else {
                                     // Si está dentro del rango, habilitar el botón
-                                    if(valor == 0 || numeroInput.value === "")
-                                    {
-                                        boton.disabled = true;
-                                    }else{
-                                        boton.disabled = false;
-                                    }
+                                    boton.disabled = valor === 0 || numeroInput.value === "";
                                 }
                             });
                         </script>
                     </form>
 
-                    <% if (typeof user === 'undefined' || user.length === 0) { %>
-                        
-                    <% } else { %>
-                    <h1>Comentar</h1>
-                    <form action="/comentar" method="post">
-                        <input type="text" name="contenido" id="contenido" required>
-                        <input type="hidden" name="id_producto" id="id_producto" value="<%= producto_encontrado.id_producto %>">
-                        <button type="submit">Comentar</button>
-                    </form>
+                    <% if (typeof user !== 'undefined' && user.length !== 0) { %>
+                        <h4>Comentar</h4>
+                        <form action="/comentar" method="post">
+                            <div class="form-group">
+                                <input type="text" name="contenido" id="contenido" class="form-control" required>
+                            </div>
+                            <input type="hidden" name="id_producto" id="id_producto" value="<%= producto_encontrado.id_producto %>">
+                            <button type="submit" class="btn btn-secondary">Comentar</button>
+                        </form>
                     <% } %>
-                    Comentarios
-                    <% if (typeof comentarios === 'undefined' || comentarios.length === 0) { %>
-                        <div class="alert-danger">No hay comentarios.</div>
-                    <% } else { %>
-                        <% comentarios.forEach(comentario => { %>
-                            <br>
-                            <h2><%= comentario.nombre_usuario %></h2>
-                            <p><%= comentario.contenido  %></p>
-                            <br>
-                            
-                        <% }); %>
-                    <% } %>
+                </div>
             <% } %>
-    </div>
-    
-    <br>
-    <br>
-    <br>
+        </div>
 
-    <footer>
+        <div class="comentarios mt-4">
+            <h4>Comentarios</h4>
+            <% if (typeof comentarios === 'undefined' || comentarios.length === 0) { %>
+                <div class="alert-danger">No hay comentarios.</div>
+            <% } else { %>
+                <% comentarios.forEach(comentario => { %>
+                    <div class="comentario">
+                        <h5><%= comentario.nombre_usuario %></h5>
+                        <p><%= comentario.contenido %></p>
+                    </div>
+                <% }); %>
+            <% } %>
+        </div>
+    </main>
+
+    <footer class="mt-4">
         <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
     </footer>
-
 </body>
 </html>
-

@@ -1,0 +1,96 @@
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.wrapper{
+    background-color: #5f5d5d;
+}
+
+/* Estilos para el encabezado */
+header {
+    padding-bottom: 20px;
+    background-color: #3a37d8;
+    color: #ffffff;
+    position: relative; /* Para posicionar correctamente la foto de perfil */
+}
+
+.titulo {
+    margin-top: 20px;
+    margin-left: 80px;
+}
+
+
+.btn-head {
+    background-color: #5e5f61;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-head:hover {
+    background-color: #0056b3;
+}
+
+.btn-head:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+}
+
+/* Estilos para las acciones del administrador */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin-actions form {
+    width: 100%;
+    max-width: 300px;
+}
+
+.admin-actions button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.admin-actions .btn-success:hover {
+    background-color: #28a745;
+}
+
+.admin-actions .btn-warning:hover {
+    background-color: #ffc107;
+}
+
+.admin-actions .btn-danger:hover {
+    background-color: #dc3545;
+}
+
+/* Estilos para el pie de página */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+}
+

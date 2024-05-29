@@ -3,46 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marketzet</title>
+    <title>Marketzet - Admin</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/styles/index.css">
+    <link rel="stylesheet" href="assets/styles/admin.css"> 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <header>
-        <div class="navbar">
-            <div class="titulo">
-                <h1><a href="/" style="text-decoration: none; color: inherit;">MARKET-ZET</a></h1>
+    <div class="wrapper d-flex flex-column min-vh-100">
+        <header class="navbar">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div class="titulo">
+                    <h1><a href="/" class="text-white text-decoration-none">MARKET-ZET</a></h1>
+                </div>
+                <div class="login_register">
+                    <% if (typeof user !== 'undefined' && user.length !== 0) { %>
+                        <div class="d-flex align-items-center">
+                            <h1 class="mr-3">Bienvenido, <%= user.username %></h1>
+                            <form action="\logout" method="post">
+                                <button type="submit" class="btn btn-head">Logout</button>
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
             </div>
-            
-            <div class="login_register">
-                <% if (typeof user === 'undefined' || user.length === 0) { %>
-                <% } else { %>
-                    <h1>Bienvenido <%= user.username %></h1>
-                    <form action="\logout" method="post">
-                        <button href="\">Logout</button>
-                    </form>
-                <% } %>
+        </header>
+
+        <main class="container flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+            <div class="admin-actions text-center">
+                <form action="/add_producto" method="post" class="mb-3">
+                    <button type="submit" class="btn btn-success btn-lg">Añadir Producto</button>
+                </form> 
+                <form action="/edit_producto" method="post" class="mb-3">
+                    <button type="submit" class="btn btn-warning btn-lg">Editar Producto</button>
+                </form> 
+                <form action="/delete_producto" method="post" class="mb-3">
+                    <button type="submit" class="btn btn-danger btn-lg">Eliminar Producto</button>
+                </form>
             </div>
-        </div>
-    </header>
-    <form action="/add_producto" method="post">
-        <button type="submit">Añadir Producto</button>
-    </form> 
+        </main>
 
-    <form action="/edit_producto" method="post">
-        <button type="submit">Editar Producto</button>
-    </form> 
-
-    <form action="/delete_producto" method="post">
-        <button type="submit">Eliminar Producto</button>
-    </form>
-
-<footer>
-    <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
-</footer>
-
+        <footer class="bg-dark text-white text-center py-3 mt-4">
+            <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
+        </footer>
+    </div>
 </body>
 </html>

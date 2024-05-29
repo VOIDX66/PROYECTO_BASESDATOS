@@ -35,7 +35,7 @@
                     <p>Precio: $<%= producto.precio_unidad %></p>
                     <form action="/editar_producto" method="post">
                         <input type="hidden" value="<%= producto.id_producto %>" name="id_producto">
-                        <button type="submit">Editar Producto</button>
+                        <button type="submit" class="btn-head">Editar Producto</button>
                     </form>
                 </div>
             <% }); %>

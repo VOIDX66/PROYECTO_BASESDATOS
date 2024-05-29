@@ -28,27 +28,37 @@
             <div class="product">
                 <h3><%= producto.nombre_producto %></h3>
                 <p><%= producto.descripcion %></p>
-                <p>Precio: $<%= producto.precio_unidad %></p>
+                <p>Precio: $<%= producto.precio_unidad.toLocaleString() %></p>
                 <form action="quitar_producto" method="post">
                     <input type="hidden" value="<%= producto.id_producto %>" name="id_producto">
                     <input type="hidden" value="<%= producto.id_carrito %>" name="id_carrito">
-                    <button type="submit">Eliminar del carrito</button>
+                    <button type="submit" class="btn-head">Eliminar del carrito</button>
                 </form>
             </div>
         <% }); %>
         <form action="/datos_comprar" method="post">
             <input type="hidden"  value="<%= productos[0].id_carrito %>" name="id_carrito">
-            <button type="submit">Comprar</button>
+            <button type="submit" class="btn-head">Comprar</button>
         </form>
     <% } %>
     
 </main>
 
-
-
 <footer>
     <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>
 </footer>
 
+<!-- Estilo del footer -->
+<style>
+    footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+    }
+</style>
 </body>
 </html>

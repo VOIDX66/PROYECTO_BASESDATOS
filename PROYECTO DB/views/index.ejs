@@ -21,15 +21,15 @@
                 <form action="/busqueda" method="get">
                     <div class="categorias">
                         <div class="dropdown">
-                            <input type="hidden" name="categoria" value="" id ="IdCategoria"\>
+                            <input type="hidden" name="categoria" value="" id="IdCategoria">
                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Categorías
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" onclick="updateCategoria('Deportes')" >Deportes</a>
-                                <a class="dropdown-item" onclick="updateCategoria('Tecnologia')" >Tecnologia</a>
-                                <a class="dropdown-item" onclick="updateCategoria('Herramientas')" >Herramientas</a>
-                                <a class="dropdown-item" onclick="updateCategoria('Moda')" >Moda</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Deportes')">Deportes</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Tecnologia')">Tecnologia</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Herramientas')">Herramientas</a>
+                                <a class="dropdown-item" onclick="updateCategoria('Moda')">Moda</a>
                                 <!-- Agrega más categorías según sea necesario -->
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                     <div class="search-bar">
                         <input type="text" placeholder="Buscar..." name="searchInput" id="searchInput">
                     </div>
-                    <button type="submit">Buscar</button>
+                    <button type="submit" class="btn-head">Buscar</button>
                     <script>
                         function updateCategoria(categoria) {
                             document.getElementById('IdCategoria').value = categoria; // Actualiza el valor del campo oculto con la categoría seleccionada
@@ -49,20 +49,19 @@
             <div class="login_register">
                 <% if (typeof user === 'undefined' || user.length === 0) { %>
                     <form action="\login" method="get">
-                        <button type="submit">Iniciar Sesion</button>
+                        <button type="submit" class="btn-head">Iniciar Sesion</button>
                     </form>
                     <form action="\register" method="get">
-                        <button type="submit">Registrarse</button>
+                        <button type="submit" class="btn-head">Registrarse</button>
                     </form>
                 <% } else { %>
                     <h1>Bienvenido <%= user.username %></h1>
                     <form action="\logout" method="post">
-                        <button href="\">Logout</button>
+                        <button type="submit" class="btn-head">Logout</button>
                     </form>
                     <form action="\carrito" method="get">
-                        <button>Carrito</button>
+                        <button class="btn-head">Carrito</button>
                     </form>
-                    
                 <% } %>
             </div>
         </div>
@@ -73,23 +72,25 @@
             <div class="alert-danger">No se encontraron productos.</div>
         <% } else { %>
             <% productos.forEach(producto => { %>
-                <div class="product">
+                <div class="product" onclick="verProducto('<%= producto.id_producto %>')" style="cursor: pointer;">
                     <% if (producto.imagen !== null) { %>
                         <img class="img_pro" src="<%= 'data:image/png;base64,' + Buffer.from(producto.imagen, 'binary').toString('base64') %>" alt="<%= producto.nombre_producto %>">
                     <% } else { %>
                         <img src="assets/images/default_product.jpg">
                     <% } %>
-                    <h3><%= producto.nombre_producto %></h3>
+                    <h2><%= producto.nombre_producto %></h2>
                     <p><%= producto.descripcion %></p>
-                    <p>Precio: $<%= producto.precio_unidad %></p>
-                    <form action="/ver_producto" method="get">
-                        <input type="hidden" value="<%= producto.id_producto %>" name="id_producto">
-                        <button type="submit">Ver Producto</button>
-                    </form>
+                    <h3>$ <%= producto.precio_unidad.toLocaleString() %></h3>
                 </div>
             <% }); %>
         <% } %>
     </main>
+
+    <script>
+        function verProducto(idProducto) {
+            window.location.href = `/ver_producto?id_producto=${idProducto}`;
+        }
+    </script>
     
     <footer>
         <p>Derechos de autor &copy; 2024 Tienda Online. Todos los derechos reservados.</p>

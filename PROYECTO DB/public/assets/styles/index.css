@@ -9,17 +9,11 @@
     margin-right: 50px;
 }
 
-.product img {
-    width: 50%; /* Ancho fijo */
-    height: 50%; /* Alto fijo */
-    object-fit: cover; /* Ajusta la imagen manteniendo su relación de aspecto */
-}
-
 /* Estilos para el encabezado */
 header {
     padding-bottom: 20px;
-    background-color: #3e4cc7;
-    color: #fff;
+    background-color: #3a37d8;
+    color: #ffffff;
     position: relative; /* Para posicionar correctamente la foto de perfil */
 }
 
@@ -28,7 +22,7 @@ header {
 }
 
 .titulo {
-    margin-top: 10px;
+    margin-top: 20px;
     margin-left: 80px;
 }
 
@@ -49,7 +43,7 @@ header {
 }
 
 .search .categorias button:hover{
-    background-color: rgb(11, 28, 182);
+    background-color: #5f5d5d;
     border: 0;
     transition: background-color 0.3s;
 }
@@ -64,9 +58,11 @@ header {
     display: inline-flex;
 }
 
+
 .login_register{
     display: inline-flex;
 }
+
 
 .login_register button{
     margin: 5px;
@@ -78,31 +74,87 @@ header {
     display: flex;
     padding-top: 20px;
     padding-inline: 1%;
-    margin-left: 4%;
+    flex-wrap: wrap;
+    background-color: #ffffff;
 }
-
 
 .product {
     margin: 1%;
-    width: 30%;
-    margin-bottom: 20px;
+    width: 20%;
+    margin-bottom: 40px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #4b4949;
     border-radius: 5px;
-    font-size: 80%;
+    background-color: #7296d8;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.product h3{
-    font-size: 90%;
+.product img {
+    width: 100%; /* Ancho fijo */
+    height: 250px; /* Alto fijo */
+    object-fit: cover; /* Ajusta la imagen manteniendo su relación de aspecto */
+    display: block; /* Elimina el espacio extra */
 }
+
+.product h2 {
+    color: #4d4949;
+    padding-top: 20px;
+    font-size: 95%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.product h3 {
+    color: #000;
+    padding-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.product p {
+    padding: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+/* Estilos para botones del header */
+.btn-head {
+    background-color: #5e5f61;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-head:hover {
+    background-color: #0056b3;
+}
+
+.btn-head:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 
 /* Estilos para el pie de página */
 footer {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    bottom: 0;
+    padding: 10px;
+    bottom: 10;
     width: 100%;
+    position: relative;
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketzet</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/styles/index.css">
+    <link rel="stylesheet" href="assets/styles/crud.css">
     <!-- Incluye jQuery y Popper.js -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -22,12 +22,14 @@
     </header>
     <h1>Comprar</h1>
     <form action="/nueva_compra" method="post">
-        <Label for="metodo_pago">Metodo de pago: </Label>
+        <p>
+        <Label for="metodo_pago">Método de pago: </Label>
         <input type="text" name="metodo_pago" id="metodo_pago" required></input>
-        <Label for="direccion">Direccion Entrega: </Label>
+        <p>
+        <Label for="direccion">Dirección Entrega: </Label>
         <input type="text" name="direccion" id="direccion" required></input>
         <p>
-        <Label for="numero">Numero contacto: </Label>
+        <Label for="numero">Número contacto: </Label>
         <input type="number" name="numero" id="numero" min="0" required></input>
         <p>
         <input type="hidden" name="id_carrito" id="id_carrito" value="<%= id_carrito %>">

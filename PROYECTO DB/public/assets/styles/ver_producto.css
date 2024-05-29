@@ -9,39 +9,32 @@
     margin-right: 50px;
 }
 
-.product img {
-    width: 50%; /* Ancho fijo */
-    height: 50%; /* Alto fijo */
-    object-fit: cover; /* Ajusta la imagen manteniendo su relación de aspecto */
-}
-
-/* Estilos para el encabezado */
-header {
-    padding-bottom: 20px;
-    background-color: #3e4cc7;
-    color: #fff;
-    position: relative; /* Para posicionar correctamente la foto de perfil */
-}
-
-.navbar{
+body {
     display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    padding: 20px;
+    background-color: #3a37d8;
+    color: #fff;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .titulo {
-    margin-top: 10px;
-    margin-left: 80px;
+    margin-left: 20px;
 }
 
-.search{
-    display: inline-flexbox;
-    width: auto;
-}
-
-.search .categorias{
+.search {
     display: inline-flex;
     width: 30%;
 }
-
 
 .search .categorias button{
     background-color: transparent;
@@ -49,38 +42,82 @@ header {
 }
 
 .search .categorias button:hover{
-    background-color: rgb(11, 28, 182);
+    background-color: #5f5d5d;
     border: 0;
     transition: background-color 0.3s;
 }
 
-.search .categorias button:active{
-    border: 0;
-    border-color: #3e4cc7;
-    transition: background-color 0.3s;
+.search .categorias {
+    margin-right: 10px;
 }
 
-.search .search-bar{
+.search .search-bar {
     display: inline-flex;
 }
 
-.login_register{
+.login_register {
     display: inline-flex;
 }
 
-.login_register button{
+.login_register button {
     margin: 5px;
 }
 
+#mainContent {
+    flex: 1;
+}
 
+.seleccion_producto {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
 
-/* Estilos para el pie de página */
+.product img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Estilos para botones del header */
+.btn-head {
+    background-color: #5e5f61;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-head:hover {
+    background-color: #0056b3;
+}
+
+.btn-head:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 footer {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 10px 0;
-    position: fixed;
+    padding: 10px;
+    position: relative;
     bottom: 0;
     width: 100%;
+}
+
+.comentarios {
+    margin-top: 20px;
+}
+
+.comentario {
+    margin-bottom: 20px;
+}
+
+form .form-control {
+    margin-bottom: 10px;
 }

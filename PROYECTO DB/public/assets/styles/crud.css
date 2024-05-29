@@ -1,0 +1,75 @@
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para el encabezado */
+header {
+    padding-bottom: 20px;
+    background-color: #3a37d8;
+    color: #ffffff;
+    position: relative; /* Para posicionar correctamente la foto de perfil */
+}
+
+.titulo {
+    margin-top: 20px;
+    margin-left: 80px;
+}
+
+.login_register {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-top: 10px;
+    font-weight: bold; /* Hacer que las etiquetas sean más visibles */
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 300px;
+    padding: 10px; /* Aumentar el relleno para hacer los campos de entrada más grandes */
+    margin-top: 5px;
+    border: 1px solid #ccc; /* Agregar un borde */
+    border-radius: 4px; /* Añadir esquinas redondeadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agregar un sombreado sutil */
+}
+
+button[type="submit"] {
+    margin-top: 20px;
+    background-color: #3a37d8;
+    color: #fff;
+    border: none;
+    padding: 12px 24px; /* Aumentar el relleno */
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Agregar una transición para suavizar los cambios */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Agregar un sombreado */
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); /* Aumentar la sombra al pasar el cursor */
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
